@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>CityHack Leipzig</title>
+        <link rel="stylesheet" href="leaflet.css" />
+        <link rel="stylesheet" href="style.css" />
+        <script src="leaflet.js"></script>
+        <script src="moment.js"></script>
+        <script src="jquery.js"></script>
+        <script src="tramstations.js"></script>
+    </head>
+    <body>
+        <div id="mapid"></div>
+        <script>
+            // Set the map to the mapid div
+            var map = L.map('mapid').setView([51.34, 12.376], 15);
+
+            // Add tile layers to the map
+            L.tileLayer('https://api.mapbox.com/styles/v1/cityhackleipzig/{id}/tiles/256/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: '',
+                maxZoom: 18,
+                id: 'ciz17jh3c00082rp8rj54yyef',
+                accessToken: 'pk.eyJ1IjoiY2l0eWhhY2tsZWlwemlnIiwiYSI6ImNpejE3YTNxeTAyYmIzMm1ubTR1amtnc3gifQ.IWZDSwTULus6WbdXhGuA6w'
+            }).addTo(map);
+
+            // Place the tram station markers
+            let markers = add_tram_stations(map);
+            for (var i = 0; i < markers.length; i++) { markers[i].setOpacity(0.4); }
+
+            var start = moment(new Date("02/04/2017"));
+            var end = moment(new Date("02/06/2017"));
+
+            (function run_loop(date) {
+                setTimeout(function () {
+                    date.add(1, 'minutes');
+                    var formatted_date = moment(date).format('DD.MM.YYYY_HH:mm');
+
+                    $.get("http://localhost:8000/query/" + formatted_date, function(data) {
+                        show_data(data);
+                    });
+
+                    if (date.diff(end) < 0) {
+                        run_loop(date);
+                    }
+                }, 40);
+            })(moment(start));
+
+            var circles = []
+
+            function show_data(data) {
+                // Remove all existing circles
+                for (var l = 0; l < circles.length; l++) {
+                    circles[l].remove();
+                }
+                circles = [];
+
+                // Draw new circles
+                for (tram_line in data) {
+                    for (var i = 0; i < data[tram_line].length; i++) {
+                        for (var k = 0; k < markers.length; k++) {
+                            var marker_content = markers[k].getPopup().getContent();
+                            if (marker_content == data[tram_line][i]) {
+                                circles.push(L.circle(markers[k].getLatLng(),
+                                             { radius: 200, fillColor: 'green', color: 'green' }).addTo(map));
+                            }
+                        }
+                    }
+                }
+            }
+
+        </script>
+    </body>
+</html>

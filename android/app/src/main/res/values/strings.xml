@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Leipzombie Trampocalypse</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="lore">Willkommen, du bist durch das Portal getreten. Ab jetzt wirst du nie wieder allein in der Bahn sein. Aber ob Freund oder Feind auf dich wartet, erfährst wenn es zu spät ist. Denn in dieser Welt haben die Zombies eine Aboskarte. Aber wer willst du sein?</string>
+    <string name="login_primer">Traust du dich in eine Bahn voller Gefahren zusteigen?\n\nMelde dich an und beweis dich in der Trampokalypse.
+    </string>
+</resources>
